@@ -6,11 +6,11 @@ import {initialCards} from '../scripts/cards.js';
 //профиль
 const editButton = document.querySelector('.profile__edit-button'); //открытие редактора
 const editPopup = document.querySelector('.popup_type_edit'); 
-const popupClose = editPopup.querySelector('.popup__close'); 
-const formElement = editPopup .querySelector('.popup__form');
+const popupCloseProfile = editPopup.querySelector('.popup__close'); 
+const formElementProfile = editPopup .querySelector('.popup__form');
 
 //карточки
-const ProfileaddBtn = document.querySelector('.profile__add-button'); //плюсик
+const profileaddBtn = document.querySelector('.profile__add-button'); //плюсик
 const popupNewCard = document.querySelector('.popup_type_new-card'); 
 const popupCloseCard = popupNewCard.querySelector('.popup__close'); 
 const formNewCard = popupNewCard.querySelector('.popup__form');
@@ -35,21 +35,23 @@ initialCards.forEach((card) => {
 //открытие редоктора
 editButton.addEventListener('click', () => {
   openModal(editPopup)
+  inputProfiletext()
 });
 
+//заполняет инпуты при открытии редактора профиля
+function inputProfiletext() {
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDescription.textContent;
+}
+
 //открытие формы добавления карточек
-ProfileaddBtn.addEventListener('click', () => {
+profileaddBtn.addEventListener('click', () => {
   openModal(popupNewCard)
 });
 
 //закрытие редактора
-popupClose.addEventListener('click', () => {
+popupCloseProfile.addEventListener('click', () => {
   closeModal(editPopup)
-});
-
-//закрытие формы добавления карточек
-popupCloseCard.addEventListener('click', () => {
-  closeModal(popupNewCard)
 });
 
 //закрытие формы добавления карточек
@@ -64,24 +66,24 @@ popupCloseImg.addEventListener('click', () => {
 
 
 //работа с формой редактирования профиля
-const nameInput = formElement.querySelector('.popup__input_type_name');
-const jobInput = formElement.querySelector('.popup__input_type_description');
+const nameInput = formElementProfile.querySelector('.popup__input_type_name');
+const jobInput = formElementProfile.querySelector('.popup__input_type_description');
 
-function handleFormSubmit(evt) {
+const profileTitle = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
+
+function handleProfileFormSubmit(evt) {
   evt.preventDefault(); 
 
   const elementName = nameInput.value;
   const elementJob = jobInput.value;
-
-  const profileTitle = document.querySelector('.profile__title');
-  const profileDescription = document.querySelector('.profile__description');
 
   profileTitle.textContent = elementName;
   profileDescription.textContent = elementJob;
 
   closeModal(editPopup);
 }
-formElement.addEventListener('submit', handleFormSubmit); 
+formElementProfile.addEventListener('submit', handleProfileFormSubmit); 
 
 
 

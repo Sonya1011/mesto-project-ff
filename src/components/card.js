@@ -1,8 +1,3 @@
-import {initialCards} from '../scripts/cards.js';
-import '../components/modal.js';
-
-const content = document.querySelector('.content'); 
-const placesList = content.querySelector('.places__list'); 
 const cardTemplate = document.querySelector('#card-template').content; 
 
 
