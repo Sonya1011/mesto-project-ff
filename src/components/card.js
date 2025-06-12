@@ -3,7 +3,7 @@ import {likeCard, unlikeCard} from "../components/api.js"
 
 const cardTemplate = document.querySelector('#card-template').content; 
 
-export function createCard (Card,  handleDeleteButtonClick, openImageCard, cardId) { 
+export function createCard (card,  handleDeleteButtonClick, openImageCard, cardId) { 
   const cardPlaces = cardTemplate.querySelector('.places__item').cloneNode(true);
 
   const cardImage = cardPlaces.querySelector('.card__image'); 
@@ -13,28 +13,28 @@ export function createCard (Card,  handleDeleteButtonClick, openImageCard, cardI
   const likeButton = cardPlaces.querySelector('.card__like-button'); 
   const likeCounter = cardPlaces.querySelector('.like-counter'); 
 
-  cardImage.src = Card.link; 
-  cardImage.alt = Card.name; 
-  cardTitle.textContent = Card.name; 
-  cardPlaces.dataset.cardId = Card._id;
+  cardImage.src = card.link; 
+  cardImage.alt = card.name; 
+  cardTitle.textContent = card.name; 
+  cardPlaces.dataset.cardId = card._id;
 
 
 if (likeCounter) {
-  likeCounter.textContent = Card.likes.length;
+  likeCounter.textContent = card.likes.length;
 }
 
-if (Card.likes.some(like => like._id === cardId)) {
+if (card.likes.some(like => like._id === cardId)) {
   likeButton.classList.add('card__like-button_is-active');
 }
 
 //удаление карточки
-if (Card.owner && Card.owner._id !== cardId) {
+if (card.owner && card.owner._id !== cardId) {
   cardButton.style.display = 'none';
 };
 
 //клик по картинке
   cardImage.addEventListener('click', () => {
-    openImageCard(Card.link, Card.name);
+    openImageCard(card.link, card.name);
   });
   
 cardButton.addEventListener('click', () => {
@@ -45,7 +45,7 @@ cardButton.addEventListener('click', () => {
 likeButton.addEventListener('click', () => {
   if (likeButton.classList.contains('card__like-button_is-active')) {
     // Убираем лайк
-    unlikeCard(Card._id)
+    unlikeCard(card._id)
       .then(updatedCard => {
         // Обновляем счетчик
         likeCounter.textContent = updatedCard.likes.length;
@@ -54,7 +54,7 @@ likeButton.addEventListener('click', () => {
       .catch(err => console.error(err));
   } else {
     // Добавляем лайк
-    likeCard(Card._id)
+    likeCard(card._id)
       .then(updatedCard => {
         likeCounter.textContent = updatedCard.likes.length;
         likeButton.classList.add('card__like-button_is-active');

@@ -34,7 +34,7 @@ export const getInitialCards = () => {
 };
 
 //Редактирование профиля
-export const NewUserInfo = (name, about) => {
+export const newUserInfo = (name, about) => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: config.headers,

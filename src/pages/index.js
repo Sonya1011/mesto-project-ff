@@ -3,7 +3,7 @@ import {createCard} from'../components/card.js';
 import {openModal, closeModal} from '../components/modal.js';
 //import {initialCards} from '../scripts/cards.js';
 import {enableValidation, clearValidation } from '../components/validation.js';
-import {NewUserInfo, getUserInfo, getInitialCards, addCard, likeCard, unlikeCard, deleteCardApi, updateAvatar} from '../components/api.js';
+import {newUserInfo, getUserInfo, getInitialCards, addCard, likeCard, unlikeCard, deleteCardApi, updateAvatar} from '../components/api.js';
 
 let currentUser = {};
 let cardDelete = {};
@@ -24,6 +24,7 @@ const avatarUrlInput = formAvatarProfile.elements.avatar;
 //Формы
 const editForm = document.forms['edit-profile'];
 const addCardFrom = document.forms['new-place'];
+const avatarForm = document.forms['new-avatar'];
 
 //карточки
 const profileaddBtn = document.querySelector('.profile__add-button');
@@ -70,7 +71,7 @@ editButton.addEventListener('click', () => {
 });
 
 //Изменение текста кнопки во время загрузки
-function buttonLoading (isLoading, formElement) {
+function loadingButton (isLoading, formElement) {
   const button = formElement.querySelector('.popup__button');
   button.textContent = isLoading ? 'Сохранение...' : 'Сохранить';
 };
@@ -88,19 +89,19 @@ function buttondeleteLoading(isLoading, formElement) {
 //Открытие формы обновления аватара.
 imgAvatar.addEventListener('click', () => {
   avatarUrlInput.value = currentUser.avatar;
-  formAvatarProfile.reset();
+  avatarForm.reset();
   openModal(avatarPopup);
 });
 
 //Закрытие формы обновления аватара.
 buttonCloseAvatar.addEventListener('click', () => {
   closeModal(avatarPopup);
-  formAvatarProfile.reset();
+  avatarForm.reset();
 });
 
 //открытие формы добавления карточек
 profileaddBtn.addEventListener('click', () => {
-  clearValidation(addCardFrom);
+  clearValidation(addCardFrom, validationConfig);
   openModal(popupNewCard);
   addCardFrom.reset();
 });
@@ -124,23 +125,23 @@ popupCloseImg.addEventListener('click', () => {
 // Обработчик отправки формы обновления аватара.
 function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
-  buttonLoading(true, formAvatarProfile);
+  loadingButton(true, avatarForm);
   updateAvatar(avatarUrlInput.value)
     .then((user) => {
       currentUser.avatar = user.avatar;
       imgAvatar.style.backgroundImage = `url(${user.avatar})`;
-      formAvatarProfile.reset();
-      clearValidation(formAvatarProfile, validationConfig);
+      avatarForm.reset();
+      clearValidation(avatarForm, validationConfig);
       closeModal(avatarPopup);
     })
   .catch(function (err) {
     console.error(err);
   })
   .finally(() => {
-    buttonLoading(false, formAvatarProfile);
+    loadingButton(false, avatarForm);
   });
 };
-formAvatarProfile.addEventListener('submit', handleAvatarFormSubmit); 
+avatarForm.addEventListener('submit', handleAvatarFormSubmit); 
 
 //работа с формой редактирования профиля
 const nameInput = formElementProfile.querySelector('#name-input');
@@ -151,9 +152,9 @@ const profileDescription = document.querySelector('.profile__description');
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
-  buttonLoading(true, editForm);
+  loadingButton(true, editForm);
 
-  NewUserInfo(nameInput.value, jobInput.value)
+  newUserInfo(nameInput.value, jobInput.value)
     .then((userData) => {
       currentUser = userData;
       profileTitle.textContent = userData.name;
@@ -164,30 +165,30 @@ function handleProfileFormSubmit(evt) {
       console.error(err);
     })
     .finally(() => {
-      buttonLoading(false, editForm);
+      loadingButton(false, editForm);
     });
 };
 formElementProfile.addEventListener('submit', handleProfileFormSubmit); 
 
 //работа с формой добавления карточек
-const CardNameInput = addCardFrom.querySelector('.popup__input_type_card-name');
-const CardUrlInput = addCardFrom.querySelector('.popup__input_type_url');
+const cardNameInput = addCardFrom.querySelector('.popup__input_type_card-name');
+const cardUrlInput = addCardFrom.querySelector('.popup__input_type_url');
 
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
 
-  buttonLoading(true, addCardFrom);
+  loadingButton(true, addCardFrom);
 
   const newCard = {
-    name: CardNameInput.value.trim(),
-    link: CardUrlInput.value.trim()
+    name: cardNameInput.value.trim(),
+    link: cardUrlInput.value.trim()
   };
 
   console.log('Отправляемая карточка:', newCard);
 
   addCard(newCard)
-    .then((Card) => {
-      const cardElement = createCard(Card, handleDeleteButtonClick, openImageCard, currentUser._id);
+    .then((card) => {
+      const cardElement = createCard(card, handleDeleteButtonClick, openImageCard, currentUser._id);
       placesList.prepend(cardElement);
 
       addCardFrom.reset();
@@ -198,7 +199,7 @@ function handleCardFormSubmit(evt) {
       console.error(err);
     })
     .finally(() => {
-      buttonLoading(false, addCardFrom);
+      loadingButton(false, addCardFrom);
     });
 };
 addCardFrom.addEventListener('submit', handleCardFormSubmit);
@@ -231,7 +232,6 @@ function handleDeleteForm(evt) {
     })
     .finally(() => {
       buttondeleteLoading(false, deleteForm);
-      closeModal(deletePopup);
     });
 };
 deleteForm.addEventListener('submit', handleDeleteForm);
