@@ -1,10 +1,20 @@
+document.querySelectorAll('.popup').forEach(popup => {
+  popup.classList.add('popup_is-animated');
+});
+
 export const openModal = (popup) => {
+  popup.classList.add('popup_is-opened');
+  document.addEventListener('keydown', keydownEscape);
+  popup.addEventListener('click', clickOverlay);
+};
+
+/*export const openModal = (popup) => {
   popup.classList.add('popup_is-animated');
   popup.classList.add('popup_is-opened');
 
   document.addEventListener('keydown', keydownEscape);
   popup.addEventListener('click', clickOverlay);
-};
+};*/
 
 export const closeModal = (popup) => {
   popup.classList.remove('popup_is-opened');

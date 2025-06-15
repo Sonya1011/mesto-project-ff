@@ -77,7 +77,7 @@ function loadingButton (isLoading, formElement) {
 };
 
 //изменение текста кнопки во время загрузки удаления
-function buttondeleteLoading(isLoading, formElement) {
+function loadingButtonDelete(isLoading, formElement) {
   const buttonDelete = formElement.querySelector('.popup__button');
   if (buttonDelete) {
     buttonDelete.textContent = isLoading ? 'Удаление...' : 'Да'; 
@@ -216,7 +216,7 @@ export function handleDeleteButtonClick(cardElement) {
 function handleDeleteForm(evt) {
   evt.preventDefault();
 
-  buttondeleteLoading(true, deleteForm);
+  loadingButtonDelete(true, deleteForm);
 
   deleteCardApi(cardDelete.id)
     .then(() => {
@@ -231,7 +231,7 @@ function handleDeleteForm(evt) {
       console.error('Ошибка удаления карточки:', err);
     })
     .finally(() => {
-      buttondeleteLoading(false, deleteForm);
+      loadingButtonDelete(false, deleteForm);
     });
 };
 deleteForm.addEventListener('submit', handleDeleteForm);
